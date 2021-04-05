@@ -1,6 +1,6 @@
 [package]
 authors = ['Substrate DevHub <https://github.com/substrate-developer-hub>']
-description = 'FRAME pallet template for defining custom runtime logic.'
+description = 'FRAME pallet template for proof of existence.'
 edition = '2018'
 homepage = 'https://substrate.dev'
 license = 'Unlicense'
@@ -27,6 +27,7 @@ serde = { version = "1.0.119" }
 sp-core = { default-features = false, version = '3.0.0' }
 sp-io = { default-features = false, version = '3.0.0' }
 sp-runtime = { default-features = false, version = '3.0.0' }
+sp-std = { default-features = false, version = '3.0.0' }
 
 [features]
 default = ['std']
@@ -34,4 +35,5 @@ std = [
     'codec/std',
     'frame-support/std',
     'frame-system/std',
+    'sp-std/std',
 ]
