@@ -267,6 +267,38 @@ impl pallet_template::Config for Runtime {
 impl pallet_poe::Config for Runtime {
 	type Event = Event;
 }
+parameter_types! {
+    // Choose a fee that incentivizes desireable behavior.
+    pub const NickReservationFee: u128 = 100;
+    pub const MinNickLength: usize = 8;
+    // Maximum bounds on storage are important to secure your chain.
+    pub const MaxNickLength: usize = 32;
+}
+
+impl pallet_nicks::Config for Runtime {
+	// The Balances pallet implements the ReservableCurrency trait.
+	// https://substrate.dev/rustdocs/v3.0.0/pallet_balances/index.html#implementations-2
+	type Currency = pallet_balances::Module<Runtime>;
+
+	// Use the NickReservationFee from the parameter_types block.
+	type ReservationFee = NickReservationFee;
+
+	// No action is taken when deposits are forfeited.
+	type Slashed = ();
+
+	// Configure the FRAME System Root origin as the Nick pallet admin.
+	// https://substrate.dev/rustdocs/v3.0.0/frame_system/enum.RawOrigin.html#variant.Root
+	type ForceOrigin = frame_system::EnsureRoot<AccountId>;
+
+	// Use the MinNickLength from the parameter_types block.
+	type MinLength = MinNickLength;
+
+	// Use the MaxNickLength from the parameter_types block.
+	type MaxLength = MaxNickLength;
+
+	// The ubiquitous event type.
+	type Event = Event;
+}
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
@@ -286,6 +318,7 @@ construct_runtime!(
 		// Include the custom logic from the template pallet in the runtime.
 		TemplateModule: pallet_template::{Module, Call, Storage, Event<T>},
 		PoeModule: pallet_poe::{Module, Call, Storage, Event<T>},
+		Nicks: pallet_nicks::{Module, Call, Storage, Event<T>},
 	}
 );
 
