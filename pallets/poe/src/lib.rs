@@ -10,6 +10,12 @@ use frame_support::{
 use frame_system::ensure_signed;
 use sp_std::vec::Vec;
 
+#[cfg(test)]
+mod mock;
+
+#[cfg(test)]
+mod tests;
+
 /// Configure the pallet by specifying the parameters and types on which it depends.
 pub trait Config: frame_system::Config {
 	/// Because this pallet emits events, it depends on the runtime's definition of an event.
@@ -19,7 +25,7 @@ pub trait Config: frame_system::Config {
 // The pallet's runtime storage items.
 // https://substrate.dev/docs/en/knowledgebase/runtime/storage
 decl_storage! {
-    trait Store for Module<T: Config> as TemplateModule {
+    trait Store for Module<T: Config> as PoeModule {
         /// The storage item for our proofs.
         /// It maps a proof to the user who made the claim and when they made it.
         Proofs: map hasher(blake2_128_concat) Vec<u8> => (T::AccountId, T::BlockNumber);
