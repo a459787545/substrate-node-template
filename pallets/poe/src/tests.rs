@@ -4,7 +4,7 @@ use frame_support::{assert_ok,assert_err, assert_noop};
 #[test]
 fn given_proof_not_yet_claimed_should_be_ok_when_create_claim() {
 	new_test_ext().execute_with(|| {
-		let proof = vec![42];
+		let proof = vec![42,2];
 		assert_ok!(PoeModule::create_claim(Origin::signed(1), proof));
 	});
 }

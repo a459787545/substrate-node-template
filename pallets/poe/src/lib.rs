@@ -5,6 +5,7 @@
 /// https://substrate.dev/docs/en/knowledgebase/runtime/frame
 
 use frame_support::{
+	traits::{Get},
     decl_module, decl_storage, decl_event, decl_error, ensure, StorageMap
 };
 use frame_system::ensure_signed;
@@ -20,6 +21,9 @@ mod tests;
 pub trait Config: frame_system::Config {
 	/// Because this pallet emits events, it depends on the runtime's definition of an event.
 	type Event: From<Event<Self>> + Into<<Self as frame_system::Config>::Event>;
+
+	/// Max length of proof
+	type MaxLengthPerProof: Get<u32>;
 }
 
 // The pallet's runtime storage items.
@@ -53,6 +57,7 @@ decl_error! {
         NoSuchProof,
         /// The proof is claimed by another account, so caller can't revoke it.
         NotProofOwner,
+        LengthLimitExceeded,
     }
 }
 
@@ -74,6 +79,8 @@ decl_module! {
             // This function will return an error if the extrinsic is not signed.
             // https://substrate.dev/docs/en/knowledgebase/runtime/origin
             let sender = ensure_signed(origin)?;
+
+			ensure!(proof.len() <= T::MaxLengthPerProof::get() as usize, Error::<T>::LengthLimitExceeded);
 
             // Verify that the specified proof has not already been claimed.
             ensure!(!Proofs::<T>::contains_key(&proof), Error::<T>::ProofAlreadyClaimed);

@@ -42,6 +42,7 @@ use pallet_transaction_payment::CurrencyAdapter;
 /// Import the template pallet.
 pub use pallet_template;
 pub use pallet_poe;
+use frame_benchmarking::frame_support::pallet_prelude::Get;
 
 /// An index to a block.
 pub type BlockNumber = u32;
@@ -266,6 +267,7 @@ impl pallet_template::Config for Runtime {
 }
 impl pallet_poe::Config for Runtime {
 	type Event = Event;
+	type MaxLengthPerProof = MaxLengthPerProof;
 }
 parameter_types! {
     // Choose a fee that incentivizes desireable behavior.
@@ -303,6 +305,7 @@ impl pallet_nicks::Config for Runtime {
 parameter_types! {
     pub MaximumSchedulerWeight: Weight = 10_000_000;
     pub const MaxScheduledPerBlock: u32 = 50;
+	pub const MaxLengthPerProof: u32 = 10_000;
 }
 
 /// Configure the runtime's implementation of the Scheduler pallet.
